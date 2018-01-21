@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+
+{% block title %}Logout{% endblock %}
+
+{% block content %}
+
+<div class="jumbotron">
+    <h1 class="display-3">Thanks for saving records today</h1>
+    <p class="lead">It is very important to automate these processes. We are in the 21st century.
+    The <em>computer age</em>. So why not join in. <i class="fa fa-smile-o"></i></p>
+
+    <p class="lead">
+    <a class="btn btn-link" href="{% url 'login' %}"> Login again?</a>
+    </p>
+</div>
+
+{% endblock %}
+

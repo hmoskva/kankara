@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+{% block title %} Customer {% endblock %}
+
+{% block content %}
+    <div class="container">
+        <div class="row">
+            {% include 'includes/stats_card.html' with bg_class='bg-primary' fa_class='fa fa-fw fa-comments' stat=customer_list|length stat_desc='Active Customers' %}
+            {% include 'includes/stats_card.html' with bg_class='bg-warning' fa_class='fa fa-fw fa-list' stat=no_inactive stat_desc='Inactive Customers' %}
+        </div>
+         <hr/>
+        <div class="row justify-content-center">
+            <div class="col-md-10">
+                <div class="card">
+
+                </div>
+            </div>
+        </div>
+    </div>
+    {% for customer in customer_list %}
+        {{ customer.name }}
+        {{ customer.active }}
+    {% endfor %}
+{% endblock %}

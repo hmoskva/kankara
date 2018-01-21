@@ -1,0 +1,25 @@
+{% for record in sales_list %}
+    <tr class="{% cycle 'table-light' 'table-info' %}">
+    <td align="center">
+        <button type="button" class="btn btn-secondary
+        btn-sm btn-edit-sale" data-url = {% url 'sales:edit' pk=record.pk  %}><i
+                class="fa fa-pencil"></i></button>
+        <button type="button" class="btn btn-danger btn-sm btn-del-sale" data-url = {% url 'sales:delete' pk=record.pk  %}><em class="fa
+        fa-trash"></em></button>
+    </td>
+    <td>{{ forloop.counter }}</td>
+    <td>{{ record.customer }}</td>
+    <td>{{ record.product }}</td>
+     <td>{{ record.units }}</td>
+    <td>{{ record.status }}</td>
+    <td>{{ record.amount_paid }}</td>
+    <td>{{ record.created_by }}</td>
+    <td>{{ record.timestamp }}</td>
+    </tr>
+     {% empty %}
+    <tr>
+      <td colspan="9" class="text-center bg-light"><i class="fa fa-exclamation-triangle"></i> No
+      sales yet</td>
+    </tr>
+{% endfor %}
+

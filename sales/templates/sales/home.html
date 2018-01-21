@@ -1,0 +1,148 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Sales{% endblock %}
+
+{% block content %}
+    <br/>
+    <div class="container mb-5">
+
+        <div class="row">
+            {% include 'includes/stats_card.html' with bg_class='bg-primary' fa_class='fa fa-fw fa-comments' stat=day_sales_list|length stat_desc='Sales today' stat_class='day-sales'  %}
+            {% include 'includes/stats_card.html' with bg_class='bg-warning' fa_class='fa fa-fw fa-list' stat=week_sales_list|length stat_desc='Sales this Week' stat_class='week-sales' %}
+            {% include 'includes/stats_card.html' with bg_class='bg-success'  fa_class='fa fa-fw fa-shopping-cart' stat=num_fully_paid_this_week stat_desc='Complete sales this week' stat_class='comp-week-sales'%}
+            {% include 'includes/stats_card.html' with bg_class='bg-danger' fa_class='fa fa-fw fa-support' stat=num_debt_this_week stat_desc='Sales on credit this week' stat_class='credit-week-sales'%}
+            {% include 'includes/stats_card.html' with bg_class='bg-dark' fa_class='fa fa-fw fa-support' stat=num_partly_paid_this_week stat_desc='Incomplete Payments this week' stat_class='inc-week-sales'%}
+            {% include 'includes/stats_card.html' with bg_class='bg-info' fa_class='fa fa-fw fa-support' stat=total_amount_today stat_desc='Made on product today' stat_class='amount-today'%}
+            {% include 'includes/stats_card.html' with bg_class='bg-dark' fa_class='fa fa-fw fa-support' stat=total_amount_this_week stat_desc='Made on product this week' stat_class='amount-this-week'%}
+        </div>
+
+
+    </div>
+    <section class="mb-5" style="background-color: lightgrey">
+        <div class="container" >
+        <div class="row justify-content-center">
+            <div class="col-md-10 ">
+                <div class="card mb-5" style="margin-top: 50px;">
+                    <div class="card-header">
+                        <div class="row">
+                            <div class="col-6">
+                                <i class="fa fa-calculator fa-fw"></i> Sale Records This Week
+                            </div>
+                            <div class="col-6 text-right" >
+{#                                <button data-url="{% url 'sales:create' %}" class="btn btn-outline-success"#}
+{#                                        id="sale-action"><i class="fa fa-plus"></i> Add record</button>#}
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="card-body">
+                        <div class="row text-center">
+                            <div class="col-12">
+{#                                <div id="edit-msg"></div>#}
+                        <table class="table table-striped table-bordered"
+                               id="sales-table">
+                            <thead>
+                                <tr>
+                                    <th><em class="fa fa-cog"></em></th>
+                                    <th class="hidden-xs">S/N</th>
+                                    <th><small><b>Customer</b></small></th>
+                                    <th><small><b>Product</b></small></th>
+                                    <th><small><b>Units</b></small></th>
+                                    <th><small><b>Status</b></small></th>
+                                    <th><small><b>Amount</b></small> </th>
+                                    <th><small><b>Created By</b></small></th>
+                                    <th><small><b>Purchase Date</b></small></th>
+                                </tr>
+                          </thead>
+                            <tbody>
+                                {% include 'sales/includes/sales_table.html' with sales_list=week_sales_list %}
+                            </tbody>
+                        </table>
+                        </div>
+                        </div>
+                    </div>
+                    <div class="card-footer">
+                        <div class="row justify-content-center">
+                            <div class="col-12">
+                                <nav aria-label="Page navigation" class="text-center" id="pag-nv">
+                                    {% include 'sales/includes/sales_table_paginator.html' with sales=week_sales_list %}
+                                </nav>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+<div class="modal fade" id="sale-edit-modal">
+      <div class="modal-dialog">
+        <div class="modal-content">
+        </div>
+      </div>
+    </div>
+    </div>
+    </section>
+    <hr/>
+
+{% endblock %}
+{% block script %}
+    <script>
+        $(document).ready(function () {
+            var loadForm = function () {
+                // event.preventDefault();
+                var thisBtn = $(this);
+                console.log(thisBtn.attr('data-url'));
+                $.ajax({
+                    url: thisBtn.attr('data-url'),
+                    method: 'get',
+                    beforeSend: function () {
+                        $("#sale-edit-modal").modal("show");
+                    },
+                    success: function (data) {
+                         $("#sale-edit-modal").find('.modal-content').html(data.sale_form)
+                    },
+                    error: function (error) {
+                        console.log('not working')
+                    }
+
+                })
+            };
+
+            var saveForm = function (event) {
+                event.preventDefault();
+                  var form = $(this);
+
+                  $.ajax({
+                      url: form.attr('action'),
+                      method: form.attr('method'),
+                      data : form.serialize(),
+                      success: function (data) {
+                          console.log(data);
+                          if(data.is_saved){
+                              var salesTable = $('#sales-table');
+                              form[0].reset();
+                              $("#sale-edit-modal").modal("hide");
+                              salesTable.find('tbody').html(data.html_sale_list);
+                              $('#pag-nv').html(data.html_sale_list_paginator);
+                              salesTable.before("<div class='alert alert-success msgg'>"+data.message+"</div>");
+                              $('.msgg').fadeOut(3000)
+
+                              //console.log('success')
+
+                          }
+                          else {
+                              console.log('not saved')
+                          }
+                      },
+                      error: function (error) {
+                          console.log('fail')
+                      }
+                  })
+    };
+            $('.btn-edit-sale').click(loadForm);
+            $('.btn-del-sale').click(loadForm);
+            $("#sale-edit-modal").on("submit", "#sale-create-form", saveForm);
+            $("#sale-edit-modal").on("submit", ".sale-delete-form", saveForm);
+        })
+    </script>
+{% endblock %}

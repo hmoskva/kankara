@@ -1,0 +1,79 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Login</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/meyer-reset/2.0/reset.min.css">
+
+    <link rel='stylesheet prefetch' href='https://fonts.googleapis.com/css?family=Roboto:400,100,300,500,700,900'>
+    <link rel='stylesheet prefetch' href='https://fonts.googleapis.com/css?family=Montserrat:400,700'>
+    {% include 'base/css.html' %}
+    <script src="https://use.fontawesome.com/a1bea2b565.js"></script>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body>
+<div class="container">
+  <div class="info">
+    <h1>Login Form</h1><span>Made with <i class="fa fa-heart"></i> by Sogbesan Habib</span>
+  </div>
+</div>
+<div class="form">
+    <div class=""><img src="{% static 'img/Kankara.png' %}" style="width: 220px; height: 220px;"/></div>
+
+
+        <form class="login-form" action="{% url 'login' %}" method="post"
+              id="kankara-login-form">
+            {% for field in form %}
+                {{ field }}
+            {% endfor %}
+            {% csrf_token %}
+            <button type="submit">
+            <i class="fa fa-sign-in"></i> Login</button>
+        </form>
+    </div>
+
+</body>
+{% include 'base/js.html' %}
+<script type="text/javascript">
+    $(document).ready(function () {
+        var loginForm = $('#kankara-login-form');
+        loginForm.submit(function (event) {
+            event.preventDefault();
+            var thisForm = $(this);
+            var method = loginForm.attr('method');
+            var action = loginForm.attr('action');
+            var data = loginForm.serialize();
+            // console.log(data);
+            $.ajax({
+                url: action,
+                method: method,
+                data: data,
+                success: function (data) {
+                    if(data.isLogin){
+                        console.log(data.loginURL);
+                        window.location.href = data.loginURL;
+                    } else {
+                        var alertMesg = "<div class='alert alert-danger tstt'><i " +
+                            "class='fa fa-info fa-circle'></i> " +
+                            "<small>Invalid Credentials</small></div>";
+                        loginForm.before(alertMesg);
+
+                        setTimeout(function () {
+                            $('.tstt').hide();
+                        }, 3000)
+                    }
+                },
+                error: function (error) {
+                   console.log(error)
+                }
+            })
+        });
+
+
+        $('.message a').click(function(){
+            $('form').animate({height: "toggle", opacity: "toggle"}, "slow");
+    });
+});
+</script>
+</html>

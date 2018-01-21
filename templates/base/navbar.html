@@ -1,0 +1,57 @@
+{% url 'login' as login_url %}
+{% url 'logout' as logout_url %}
+{#{% url 'sales:home' as sales_home %}#}
+{% url 'customers:home' as customers_home %}
+{% url 'reports:search' as reports_home %}
+
+<header class="mb-3">
+<nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
+    <div class="container">
+  <a class="navbar-brand" href="{% url 'dashboard' %}" style="font-family: sans-serif; font-weight:
+  bold; font-size: 30px;">Kankara</a>
+
+      <!--<img src="{{ img_url }}" style="width: 150px; height: 150px;">-->
+
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+
+  <div class="collapse navbar-collapse" id="navbarSupportedContent">
+    <ul class="navbar-nav mr-auto">
+        <li class="nav-item">
+        <a class="nav-link" href="#">Profile <span class="sr-only">(current)</span></a>
+      </li>
+{#      <li class="nav-item {% if request.path == sales_home %} active {% endif %}">#}
+{#        <a class="nav-link" href="{{ sales_home }}">Sales</a>#}
+{#      </li>#}
+{#      <li class="nav-item {% if request.path == customers_home %} active {% endif %}">#}
+{#        <a class="nav-link" href="{{ customers_home }}">Customers</a>#}
+{#      </li>#}
+        <li class="nav-item {% if request.path == reports_home %} active {% endif %}">
+        <a class="nav-link" href="{{ reports_home }}">Reports</a>
+      </li>
+        </ul>
+
+        <ul class="navbar-nav">
+        {% if request.user.is_authenticated %}
+
+             <li class="nav-item">
+               <a class="nav-link" href="#"> Hello, {{ request.user.username }}</a>
+            </li>
+            <li class="nav-item {% if request.path == logout_url %} active {% endif %}">
+               <a class="nav-link" href="{{ logout_url }}">Logout</a>
+            </li>
+        {% else %}
+            <li class="nav-item {% if request.path == login_url %} active {% endif %}">
+                <a class="nav-link" href="{{ login_url }}">Login</a>
+            </li>
+        {% endif %}
+        </ul>
+{#  <form class="form-inline mt-2 mt-md-0">#}
+{#            <input class="form-control mr-sm-2" type="text" placeholder="Search" aria-label="Search">#}
+{#            <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>#}
+{#          </form>#}
+  </div>
+</div>
+</nav>
+</header>

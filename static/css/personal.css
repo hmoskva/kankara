@@ -1,0 +1,36 @@
+.body-bg{
+  background-size: cover;
+  background-position: center center;
+  position: relative;
+  top: 0;
+  bottom: 0;
+  height: 100vh;
+  z-index: -10;
+}
+
+.body-bg-overlay{
+  position: absolute;
+  background-color: rgba(0,0,0,0.5);
+  top: 0;
+  bottom: 0;
+  height: 100%;
+  width: 100%;
+  z-index: -5
+}
+
+.sectorr{
+    /*width: 100%;*/
+    /*height: 450px;*/
+    /*background-size: cover;*/
+    /*background: url('/static/img/stats-bg.jpg') no-repeat fixed top;*/
+    /*background-size: 100% 100%;*/
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.3), 0 6px 20px 0 rgba(0, 0, 0, 0.3),  0 6px 20px 0 rgba(0, 0, 0, 0.3),  0 6px 20px 0 rgba(0, 0, 0, 0.3);
+
+}
+
+.stats-nums{
+  color: white;
+  font-size: 150px;
+  font-family:'Roboto', sans-serif;
+  font-weight: bold;
+}
