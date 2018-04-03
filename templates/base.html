@@ -13,12 +13,13 @@
 
 
         {% block content %}{% endblock %}
-
+        {% include 'base/footer.html' %}
 </body>
 {% include 'base/js.html' %}
 {% block script %}
     <script>
         $(document).ready(function () {
+
             function getCookie(name) {
             var cookieValue = null;
             if (document.cookie && document.cookie !== '') {

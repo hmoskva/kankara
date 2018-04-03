@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from django.views.generic import ListView, TemplateView, View
+from django.views.generic import ListView, TemplateView, View, DetailView
 from django.http import JsonResponse
 from django.core.paginator import Paginator, Page, EmptyPage, PageNotAnInteger
 from django.template.loader import render_to_string
@@ -9,6 +9,7 @@ from django.contrib.auth.decorators import login_required
 
 from businesses.models import Business
 from .models import Sale
+from products.models import Product
 from .forms import SaleForm
 
 
@@ -36,12 +37,12 @@ def list_sale(request, slug):
 @login_required
 def create_sale(request):
     data = dict()
-    print('in here')
     form = SaleForm(data=request.POST or None)
-    # form.fields['business'].initial = business
-    # form.fields['product'].queryset = business.products.all()
-
     if request.method == 'POST':
+        # id_product = int(request.POST.get('product'))
+        # print(id_product)
+        # form.fields['product'].choices = [(id_product, id_product)]
+        print(form.data)
         if form.is_valid():
             new_sale = form.save(commit=False)
             new_sale.created_by = request.user
@@ -49,6 +50,9 @@ def create_sale(request):
             data['saved'] = True
         else:
             data['saved'] = False
+            data['errors'] = form.errors
+            print(form.errors)
+            print(form.non_field_errors())
 
     data['sale_form'] = render_to_string('sales/includes/sale_form.html', {
         'form': form, 'action_url': '/sale/create/', 'modal_title': 'Add record'
@@ -125,7 +129,7 @@ def get_products_api_view(request, pk):
     business = get_object_or_404(Business, pk=pk)
     products = business.products.all()
     returned_data = [{
-        'id': x.id,
+        'id': x.pk,
         'name': x.name,
         'rate': x.rate
     } for x in products]
@@ -133,33 +137,8 @@ def get_products_api_view(request, pk):
     return JsonResponse(data)
 
 
-# class SalesListView(LoginRequiredMixin, ListView):
-#     # queryset = Sale.objects.this_week()
-#     template_name = 'sales/home.html'
-#     context_object_name = 'weeks_sale_list'
-#     # paginate_by = 10
-#
-#     def get_queryset(self, *args, **kwargs):
-#         # print('hree')
-#         slug = self.kwargs.get('slug', None)
-#         business = get_object_or_404(Business, slug=slug)
-#         return Sale.objects.this_week(business)
-#
-#     def get_context_data(self, *args, **kwargs):
-#         context = super(SalesListView, self).get_context_data(*args, **kwargs)
-#         request = self.request
-#         slug = self.kwargs.get('slug', None)
-#         business = get_object_or_404(Business, slug=slug)
-#         total_today = Sale.objects.total_today(business)
-#         total_this_week = Sale.objects.total_this_week(business)
-#         form = SaleForm()
-#         context['day_sales_list'] = Sale.objects.this_day(business)
-#         context['week_sales_list'] = Sale.objects.this_week(business)
-#         context['total_amount_today'] = 'N{amount}'.format(amount=total_today['amount_paid__sum'] or 0)
-#         context['total_amount_this_week'] = 'N{amount}'.format(amount=total_this_week['amount_paid__sum'] or 0)
-#         context['num_fully_paid_this_week'] = Sale.objects.get_number_of_paid_sales_by_week(business)
-#         context['num_partly_paid_this_week'] = Sale.objects.get_number_of_part_paid_sales_by_week(business)
-#         context['num_debt_this_week'] = Sale.objects.get_number_of_debt_sales_by_week(business)
-#         context['form'] = form
-#
-#         return context
+def get_product_fixed_price(request, pk):
+    data = dict()
+    product = get_object_or_404(Product, pk=pk)
+    data['rate'] = product.rate
+    return JsonResponse(data)

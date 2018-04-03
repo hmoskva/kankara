@@ -30,36 +30,42 @@
           var thisControl = $(this);
           var id = parseInt(thisControl.val());
           var productControl = $('#id_product');
-           // console.log(typeof(parseInt(id)));
-           // console.log(id);
-          // console.log(thisControl.text());
+          if (isNaN(id)){productControl.html(" ")}
+          else {
                $.get("/sale/get-products/"+id, function (data) {
                    console.log(data);
                    if (data.products.length > 0){   // !!!check for length of options instead
-                       // clear options
-
+                        productControl.html(" ");
+                        productControl.append("<option value selected>------</option>");
                        $.each(data.products, function (index, value) {
-                            productControl.append("<option value="+value.rate+">"+value.name+"</option>")
+                            productControl.append("<option value="+value.id+">"+value.name+"</option>")
                        })
                    }
                });
-{#            .attr('value', value.rate).text(value.name)#}
-{#            {% url 'sales:get_products' pk=id %}#}
+          }
       };
         var calculateAmount = function () {
-            var useRate = $(this);
+            var useRate = this; // wrapping this in a jquery obj wont work here. dunno why
             var units = $('#id_units');
             var amounts = $('#id_amount_paid');
             var product = $('#id_product');
-            if(useRate.checked = true){
-                var calculated = units*parseInt(product.val());
-                amounts.text(calculated);
-                amounts.attr('disabled')
+            if(useRate.checked){
+                // get product fixed price
+                $.get('/sale/get-product-price/'+parseInt(product.val()), function (data) {
+                    console.log(data);
+{#                    amounts.attr('disabled', 'disabled');#}
+                    amounts.val(data.rate * units.val());
+                }, 'json');
+
+
             }else{
-                amounts.removeAttribute('disabled')
+                amounts.removeAttr('disabled');
             }
         };
-        $('#id_business').change(loadProducts);
-        $('#id_default_rate').click(calculateAmount)
+{#        $('#id_business').change(loadProducts);#}
+        $('#id_default_rate').change(calculateAmount);
+        $('#id_units').change(function () {
+            console.log('changed units')
+        })
     </script>
 {% endblock %}

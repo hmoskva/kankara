@@ -29,8 +29,12 @@
 }
 
 .stats-nums{
-  color: white;
+  color: #5a5a5a;
   font-size: 150px;
   font-family:'Roboto', sans-serif;
   font-weight: bold;
+}
+
+.stats-text{
+  color: #5a5a5a;
 }

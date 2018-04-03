@@ -10,14 +10,14 @@
           <li data-target="#myCarousel" data-slide-to="1"></li>
           <li data-target="#myCarousel" data-slide-to="2"></li>
         </ol>
-        <div class="carousel-inner">
+        <div class="carousel-inner to-biz" data-section-name="to-biz">
           <div class="carousel-item active">
             <img class="first-slide img-fluid" style="max-width: 100%; height: auto" src="{% static 'img/carousel-3.jpg' %}" alt="First slide">
             <div class="container">
               <div class="carousel-caption text-left">
                 <h1 style="font-family: 'Roboto', sans-serif;">Ease of use</h1>
                 <p style="font-family: 'Open Sans Condensed', sans-serif;">This cruise is easy to use. Do not be intimidated. Habib is making this as easy as possible for you to use. </p>
-                <p><a style="font-family: 'Yanone Kaffeesatz', sans-serif;" class="btn btn-lg btn-primary" href="#" role="button">Save records now</a></p>
+                <p><a style="font-family: 'Yanone Kaffeesatz', sans-serif;" class="btn btn-lg btn-primary to-biz" href="#biz-section" role="button">Save records now</a></p>
               </div>
             </div>
           </div>
@@ -27,7 +27,7 @@
               <div class="carousel-caption">
                 <h1 style="font-family: 'Roboto', sans-serif;">Analytics</h1>
                 <p style="font-family: 'Open Sans Condensed', sans-serif;">Numbers are very important in any business. Included in each list view are necessary numbers relating to your business that you may want to keep an eye on!</p>
-                <p><a style="font-family: 'Yanone Kaffeesatz', sans-serif;" class="btn btn-lg btn-primary" href="#" role="button">View summary</a></p>
+                <p><a style="font-family: 'Yanone Kaffeesatz', sans-serif;" class="btn btn-lg btn-primary" href="{% url 'reports:search' %}" role="button">View Reports</a></p>
               </div>
             </div>
           </div>
@@ -37,7 +37,7 @@
               <div class="carousel-caption text-right">
                 <h1 style="font-family: 'Roboto', sans-serif;">Future guaranteed</h1>
                 <p style="font-family: 'Open Sans Condensed', sans-serif;">Are businesses changing in the future? Worry not. You dont have to call me from nysc to add extra code. Its been done in an easy way for you to simply add with Javascript enabled CRUD views. </p>
-                <p><a style="font-family: 'Yanone Kaffeesatz', sans-serif;" class="btn btn-lg btn-primary" href="#" role="button">Browse businesses</a></p>
+                <p><a style="font-family: 'Yanone Kaffeesatz', sans-serif;" class="btn btn-lg btn-primary to-biz" href="#biz-section" role="button">Browse businesses</a></p>
               </div>
             </div>
           </div>
@@ -54,12 +54,13 @@
     <div class="container">
     <div class="row mb-5">
         <div class="col-6 offset-3">
+            <p class="display-4 text-center">Businesses</p>
             <hr style="width:50%"/>
 {#            <p style="font-family: 'Roboto', sans-serif; font-size: 40px" class="text-center">Let's get to it then</p>#}
         </div>
 
     </div>
-        <div class="row mb-5">
+        <div class="row mb-5" id="biz-section">
             {% for obj in business_list %}
                 <div class="col">{% include 'businesses/includes/business-card.html' with instance=obj %}</div>
 
@@ -67,6 +68,7 @@
         </div>
     <div class="row mb-5">
         <div class="col-6 offset-3">
+            <p class="display-4 text-center">Statistics</p>
             <hr style="width:50%"/>
         </div>
 
@@ -74,17 +76,28 @@
 
     </div>
 
-    <section class="sectorr" style="background: url('/static/img/testt.jpg') no-repeat center center; background-size: cover; padding: 100px 0; color: #f8f8f8; ">
+    <section class="mb-5" style="background: url('/static/img/statsbg.png') no-repeat center center; padding: 100px 0; color: #f8f8f8; ">
         <div class="container">
             <div class="row">
-            <div class="col-sm-4 text-center"><span class="stats-nums">{{ business_list|length }}</span>businesses</div>
-            <div class="col-sm-4 text-center"><span class="stats-nums">{{ customers }}</span>{% if customers == 1 %}customer{% else %} customers{% endif %}</div>
-            <div class="col-sm-4 text-center"><span class="stats-nums">{{ products }}</span>{% if products == 1 %}product{% else %}products{% endif %}</div>
-
+            <div class="col-sm-4 text-center">
+                <h1 class="display-4 stats-nums">{{ business_list|length }}</h1><p class="lead stats-text">businesses</p>
             </div>
+            <div class="col-sm-4 text-center">
+                <h1 class="display-4 stats-nums">{{ customers }}</h1> <p class="lead stats-text">{% if customers == 1 %}customer{% else %} customers{% endif %}</p>
+               </div>
+            <div class="col-sm-4 text-center">
+                <h1 class="display-4 stats-nums">{{ products }}</h1><p class="lead stats-text">{% if products == 1 %}product{% else %} products{% endif %}</p>
+                </div>
+            </div>
+        <div class="text-center"><hr style="width:25%"/></div>
+        <div class="text-center">
+            <a class="btn btn-lg btn-outline-secondary" href="#biz-section">Save Records</a>
+        </div>
         </div>
     </section>
 
+<br/>
+    <br/><br/><br/>
     <div class="modal fade" id="sale-create-modal">
       <div class="modal-dialog">
         <div class="modal-content">
@@ -94,14 +107,16 @@
 
 {% endblock %}
 {% block script %}
+
+    <script>
+
+</script>
     <script>
         $(document).ready(function () {
-
-{#            var loadProducts = function () {#}
-{#                var thisField = $(this);#}
-{#                console.log(thisField.selected())#}
-{#                // $.get('')#}
-{#            };#}
+            $('.stats-nums').counterUp({
+                delay: 10,
+                time: 500
+                });
               var loadForm = function () {
                 // event.preventDefault();
                 var thisBtn = $(this);

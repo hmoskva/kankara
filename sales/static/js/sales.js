@@ -20,14 +20,8 @@ $(document).ready(function () {
     var saveForm = function (event) {
         event.preventDefault();
       var form = $(this);
-
-      $.ajax({
-          url: form.attr('action'),
-          method: form.attr('method'),
-          data : form.serialize(),
-          success: function (data) {
-              console.log(data);
-              if(data.saved){
+      $.post(form.attr('action'), form.serialize(), function (data) {
+            if(data.saved){
                   form[0].reset();
                   $('#sale-create-modal').find('.modal-body').first().before("<div class='form-group saved'><div class='alert alert-success'>Success</div></div>");
                   setTimeout(function () {
@@ -38,11 +32,18 @@ $(document).ready(function () {
               else {
                   console.log('not saved')
               }
-          },
-          error: function (error) {
-              console.log('fail')
-          }
-      })
+      });
+      // $.ajax({
+      //     url: form.attr('action'),
+      //     method: form.attr('method'),
+      //     data : form.serialize(),
+      //     success: function (data) {
+      //
+      //     },
+      //     error: function (error) {
+      //         console.log('fail')
+      //     }
+      // })
     };
 
     $('#sale-action').click(loadForm);

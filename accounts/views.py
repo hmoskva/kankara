@@ -12,6 +12,7 @@ def login_view(request):
     }
     # is_login = None
     if form.is_valid():
+        print('hereeee')
         username = form.cleaned_data.get('username')
         password = form.cleaned_data.get('password')
         user = authenticate(request, username=username, password=password)
@@ -21,6 +22,7 @@ def login_view(request):
         else:
             is_login = False
         if request.is_ajax():
+            print('is ajax')
             data = {
                 'isLogin': is_login,
                 'loginURL': '/dashboard/'
